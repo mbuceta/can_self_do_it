@@ -5,11 +5,11 @@ require "can_do_it/version"
 Gem::Specification.new do |s|
   s.name        = "can_do_it"
   s.version     = CanDoIt::VERSION
-  s.authors     = ["Martín Buceta"]
+  s.authors     = ["Juan Martín Buceta"]
   s.email       = ["mbuceta@grantaire.com.ar"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "martinbuceta.com.ar"
+  s.summary     = %q{Simple can_*? like method to manage permissions}
+  s.description = %q{Provide modules to work with sereveral permission policies}
 
   s.rubyforge_project = "can_do_it"
 
@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec"
   # s.add_runtime_dependency "rest-client"
 end
