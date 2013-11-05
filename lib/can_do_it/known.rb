@@ -37,7 +37,7 @@ private
 
   #we are finding object owner
   def owner_for(obj)
-    (obj.is_a?(self.class) && obj) || owner_method_names.select{|n| (obj.respond_to?(n) && obj.send(n))}
+    (obj.is_a?(self.class) && obj) || (owner_method = owner_method_names.detect{|n| obj.respond_to?(n)}) && obj.send(owner_method)
   end
 
 end
