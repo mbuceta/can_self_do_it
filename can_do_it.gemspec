@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = CanDoIt::VERSION
   s.authors     = ["Juan Martín Buceta"]
   s.email       = ["mbuceta@grantaire.com.ar"]
-  s.homepage    = "martinbuceta.com.ar"
+  s.homepage    = "http:://martinbuceta.com.ar"
   s.summary     = %q{Simple can_*? like method to manage permissions}
   s.description = %q{Provide modules to work with sereveral permission policies}
 
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # specify any dependencies here; for example:
+  s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
   # s.add_runtime_dependency "rest-client"
 end
