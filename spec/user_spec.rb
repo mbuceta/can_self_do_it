@@ -12,7 +12,7 @@ describe User do
 
    # Other User Blogs and Posts
    @blog_other_user = Blog.new(User.new)
-   @post_other_user = Post.new(@blog_user)
+   @post_other_user = Post.new(@blog_other_user)
 
    # Admin Blogs and Posts
    @blog_admin = Blog.new(Admin.new)
@@ -49,6 +49,18 @@ describe User do
   it "can't edit other's Posts" do
     @user.can_edit?(@post_admin).should      == false
     @user.can_edit?(@post_other_user).should == false
+  end
+
+  it "can comment his own posts" do
+    @user.can_create?(Comment, @user_post).should  == true
+  end
+
+  it "can comment other user posts" do
+    @user.can_create?(Comment, @other_user_post).should  == true
+  end
+
+  it "can comment admin posts" do
+    @user.can_create?(Comment, @other_user_post).should  == true
   end
 
   it "can delete his Blogs" do

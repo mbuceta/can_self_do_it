@@ -34,6 +34,11 @@ describe Admin do
     @admin.can_edit?(@post_user).should  == true
   end
 
+  it "can comment any Post" do
+    @admin.can_create?(Comment, @post_admin).should == true
+    @admin.can_create?(Comment, @post_user).should  == true
+  end
+
   it "can delete any Blog" do
     @admin.can_delete?(@blog_admin).should == true
     @admin.can_delete?(@blog_user).should  == true

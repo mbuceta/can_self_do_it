@@ -6,36 +6,15 @@ $LOAD_PATH.unshift File.expand_path("../lib", File.dirname(__FILE__))
 
 RSpec.configure do |config|
  config.before :all do
-#   @admin, @user1, @user2, @guess = User.create(true), User.create, User.create, Guess.instance
-#   # Admin Blogs and Posts
-#   @blog_admin = Blog.create(@admin)
-#   @post_admin = Post.create(@blog_admin)
-#   # User1 Blogs and Posts
-#   @blog_user1 = Blog.create(@user1)
-#   @post_user1 = Post.create(@blog_user1)
-#   # User2 Blogs
-#   @blog_user2 = Blog.create(@user2)
-#   @post_user2 = Post.create(@blog_user2)
-#   # Guess has not Blog
  end
 end
-
-#module Holdeable
-#  def all
-#    @all ||= []
-#  end
-#
-#  def create(*args)
-#    newone = self.new(*args)
-#    self.all << newone
-#    newone
-#  end
-#end
-
 
 class Guess
  include Singleton
  include CanDoIt::Unknown
+  # Custom
+  # Guess only can see admin comments
+ def can_see_comment?(comment); comment.user.admin?; end
 end
 
 class User
@@ -44,7 +23,13 @@ class User
   def admin?; false;end
   def initialize
     @blogs = []
+    self
   end
+
+  # Custom
+  # Users can comment any post
+  def can_create_comment?(post); true; end
+
 end
 
 class Admin
@@ -68,15 +53,27 @@ class Blog
 end
 
 class Post
-  attr_accessor :blog
+  attr_accessor :blog, :comments
 
   def owner
     @blog.user
   end
 
   def initialize(blog)
+    @comments = []
     @blog = blog
     @blog.posts << self
+    self
+  end
+end
+
+class Comment
+  attr_accessor :post, :user
+
+  def initialize(post, user)
+    @post = post
+    @user = user
+    @post.comments << self
     self
   end
 end
