@@ -3,7 +3,7 @@ module Helper
 
   def self.class_2_method_sub_str(a_class)
     str = a_class.to_s
-    str.respond_to?(:underscore) ?  str.underscore.sub('/','_') : self.underscore(str).sub('/','_')
+    str.respond_to?(:underscore) ?  str.underscore.sub('/','__') : self.underscore(str).sub('/','__')
   end
 
   def self.underscore(camel_cased_word)
