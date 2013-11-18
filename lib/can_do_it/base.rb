@@ -11,6 +11,11 @@ module Base
     respond_to_without_can_do_it_method?(method) ?  self.send(method,obj) : can_see_default?(obj)
   end
 
+  def can_edit?(obj)
+    method = "can_edit_#{CanDoIt::Helper.class_2_method_sub_str(obj.class)}?"
+    respond_to_without_can_do_it_method?(method) ?  send(method,obj) : can_edit_default?(obj)
+  end
+
   # parent: parent of the object created
   # Examples:
   # - session_user.can_create?(Proposal, project)
@@ -20,14 +25,9 @@ module Base
     respond_to_without_can_do_it_method?(method) ?  send(method,parent) : can_create_default?(parent)
   end
 
-  def can_edit?(obj)
-    method = "can_edit_#{CanDoIt::Helper.class_2_method_sub_str(obj.class)}?"
-    respond_to_without_can_do_it_method?(method) ?  send(method,obj) : can_modify_default?(obj)
-  end
-
   def can_delete?(obj)
     method = "can_delete_#{CanDoIt::Helper.class_2_method_sub_str(obj.class)}?"
-    respond_to_without_can_do_it_method?(method) ?  send(method,obj) : can_modify_default?(obj)
+    respond_to_without_can_do_it_method?(method) ?  send(method,obj) : can_delete_default?(obj)
   end
 
 
@@ -52,13 +52,17 @@ module Base
 protected
 
   def can_see_default?(obj);           raise NotImplementedError.new("You must implement can_see_default?.")    ; end
-  def can_modify_default?(obj);        raise NotImplementedError.new("You must implement can_modify_default?.") ; end
+  def can_edit_default?(obj);          raise NotImplementedError.new("You must implement can_edit_default?.")   ; end
   def can_create_default?(parent);     raise NotImplementedError.new("You must implement can_create_default?.") ; end
   def can_delete_default?(obj);        raise NotImplementedError.new("You must implement can_delete_default?.") ; end
+  def can_modify_default?(obj);        raise NotImplementedError.new("You must implement can_modify_default?.") ; end
 
+private
+
+  def auto_can_do_it_method?;  false; end
 
   def can_do_it_method?(symbol)
-    !!(symbol.to_s =~ /$can_.+\?/ )
+     auto_can_do_it_method? && !!(symbol.to_s =~ /^can_.+\?/ )
   end
 
 end

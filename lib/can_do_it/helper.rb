@@ -17,7 +17,7 @@ module Helper
     word
   end
 
-  def self.camelize(term)
+  def self.camelize(string)
     string.sub(/^[a-z\d]*/){$&.capitalize}.gsub(/(?:_|(\/))([a-z\d]*)/i) { "#{$1}#{$2.capitalize}"}.gsub('/', '::')
   end
 
