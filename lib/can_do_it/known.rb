@@ -6,13 +6,20 @@ include CanDoIt::Base
 
 protected
 
-  # Check if self is the administration or the obj owner
-  def can_modify_default?(obj); administrator_or_object_owner?(obj); end
+  def can_see_default?(obj); true; end
+
+  # Check for can_modify_default
+  def can_edit_default?(obj); can_modify_default?(obj); end
 
   # Check the parent owner of the object to create
   def can_create_default?(parent); can_modify_default?(parent); end
 
-  def can_see_default?(obj); true; end
+  # Check for can_modify_default
+  def can_delete_default?(obj); can_modify_default?(obj); end
+
+  # Check if self is the administration or the obj owner
+  def can_modify_default?(obj); administrator_or_object_owner?(obj); end
+
 
   def owner_method_names
     [:owner, :author, :user]
