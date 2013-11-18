@@ -70,7 +70,7 @@ describe CanDoIt::Base do
       expect{can_do_it_impl.can_view?(nil)}.to raise_error(NoMethodError)
     end
 
-    it "must respond to can_eliminate?" do
+    it "mustn't respond to can_eliminate?" do
       can_do_it_impl = CanDoItImpWithoutAuto.new
       can_do_it_impl.respond_to?(:can_eliminate?).should  == false
     end
@@ -102,7 +102,7 @@ describe CanDoIt::Base do
       can_do_it_impl.respond_to?(:can_view?).should  == true
     end
 
-    it "must raise NoMethodError when call can_view?" do
+    it "must raise NotImplementedError when call can_view?" do
       can_do_it_impl = CanDoItImpWithAuto.new
       expect{can_do_it_impl.can_view?(nil)}.to raise_error(NotImplementedError)
     end
@@ -112,7 +112,7 @@ describe CanDoIt::Base do
       can_do_it_impl.respond_to?(:can_eliminate?).should  == true
     end
 
-    it "must raise NoMethodError when call can_eliminate?" do
+    it "must raise NotImplementedError when call can_eliminate?" do
       can_do_it_impl = CanDoItImpWithAuto.new
       expect{can_do_it_impl.can_eliminate?(nil)}.to raise_error(NotImplementedError)
     end
