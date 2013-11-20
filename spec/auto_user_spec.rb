@@ -4,11 +4,11 @@ describe User do
 
   before(:all) do
    # User
-   class UserActsAsCanDoIt < User
-     acts_as_can_do_it(:as => :known, :auto => false)
+   class AutoUserActsAsCanDoIt < User
+     acts_as_can_do_it(:as => :known, :auto => true)
    end
 
-   @user      = UserActsAsCanDoIt.new
+   @user      = AutoUserActsAsCanDoIt.new
 
    # User Blogs and Posts
    @blog_user = Blog.new(@user)
@@ -83,6 +83,15 @@ describe User do
   it "can't delete other's Posts" do
     @user.can_delete?(@post_admin).should      == false
     @user.can_delete?(@post_other_user).should == false
+  end
+
+  it "can share his Posts" do
+    @user.can_share?(@post_user).should == true
+  end
+
+  it "can't share other's Blogs" do
+    @user.can_share?(@blog_admin).should      == false
+    @user.can_share?(@blog_other_user).should == false
   end
 
 end

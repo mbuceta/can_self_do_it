@@ -5,7 +5,7 @@ describe Guess do
   before(:all) do
 
     class GuessActsAsCanDoIt < Guess
-      acts_as_can_do_it(:as => :unknown, :auto => false)
+      acts_as_can_do_it(:as => :unknown, :auto => true)
     end
 
     @guess = GuessActsAsCanDoIt.instance
@@ -61,6 +61,14 @@ describe Guess do
     @guess.can_see?(@comment_admin).should == true
   end
 
+  it "can't share Posts" do
+    @guess.can_share?(@post_admin).should == false
+    @guess.can_share?(@post_user).should  == false
+  end
 
+  it "can't join to Blogs" do
+    @guess.can_join?(@blog_admin).should == false
+    @guess.can_join?(@blog_user).should  == false
+  end
 
 end

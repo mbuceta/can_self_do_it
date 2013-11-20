@@ -4,10 +4,11 @@ describe Admin do
 
   before(:all) do
    # Admin Blogs and Posts
-   class AdminActsAsCanDoIt < Admin
-     acts_as_can_do_it(:as => :known, :auto => false)
+   class AutoAdminActsAsCanDoIt < Admin
+     acts_as_can_do_it(:as => :known, :auto => true)
    end
-   @admin      = AdminActsAsCanDoIt.new
+
+   @admin      = AutoAdminActsAsCanDoIt.new
    @blog_admin = Blog.new(@admin)
    @post_admin = Post.new(@blog_admin)
    # User Blogs and Posts
@@ -50,6 +51,16 @@ describe Admin do
   it "can delete any Post" do
     @admin.can_delete?(@post_admin).should == true
     @admin.can_delete?(@post_user).should  == true
+  end
+
+  it "can share any Blog" do
+    @admin.can_share?(@blog_admin).should == true
+    @admin.can_share?(@blog_user).should  == true
+  end
+
+  it "can join any Post" do
+    @admin.can_share?(@post_admin).should == true
+    @admin.can_share?(@post_user).should  == true
   end
 
 end

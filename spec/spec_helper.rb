@@ -11,14 +11,12 @@ end
 
 class Guess
  include Singleton
- include CanDoIt::Unknown
   # Custom
   # Guess only can see admin comments
  def can_see_comment?(comment); comment.user.admin?; end
 end
 
 class User
-  include CanDoIt::Known
   attr_accessor :blogs
   def admin?; false;end
   def initialize
@@ -33,7 +31,6 @@ class User
 end
 
 class Admin
-  include CanDoIt::Known
   attr_accessor :blogs
   def admin?; true;end
   def initialize
@@ -41,6 +38,7 @@ class Admin
     self
   end
 end
+
 
 class Blog
   attr_accessor :user, :posts

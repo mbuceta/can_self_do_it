@@ -1,8 +1,5 @@
-require 'can_do_it/base'
 module CanDoIt
 module Known
-
-include CanDoIt::Base
 
 protected
 
