@@ -4,10 +4,10 @@ describe Admin do
 
   before(:all) do
    # Admin Blogs and Posts
-   class AdminActsAsCanDoIt < Admin
-     acts_as_can_do_it(:as => :known, :auto => false)
+   class AdminActsAsCanSelfDoIt < Admin
+     acts_as_can_self_do_it(:as => :known, :auto => false)
    end
-   @admin      = AdminActsAsCanDoIt.new
+   @admin      = AdminActsAsCanSelfDoIt.new
    @blog_admin = Blog.new(@admin)
    @post_admin = Post.new(@blog_admin)
    # User Blogs and Posts

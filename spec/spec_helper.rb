@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'singleton'
 require 'rspec'
-require 'can_do_it'
+require 'can_self_do_it'
 $LOAD_PATH.unshift File.expand_path("../lib", File.dirname(__FILE__))
 
 RSpec.configure do |config|

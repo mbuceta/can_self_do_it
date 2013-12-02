@@ -1,4 +1,4 @@
-module CanDoIt
+module CanSelfDoIt
 module Unknown
 
 protected

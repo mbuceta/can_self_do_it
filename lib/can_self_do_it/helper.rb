@@ -1,4 +1,4 @@
-module CanDoIt
+module CanSelfDoIt
 module Helper
 
   def self.class_2_method_sub_str(a_class)

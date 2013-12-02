@@ -4,11 +4,11 @@ describe Guess do
 
   before(:all) do
 
-    class GuessActsAsCanDoIt < Guess
-      acts_as_can_do_it(:as => :unknown, :auto => true)
+    class GuessActsAsCanSelfDoIt < Guess
+      acts_as_can_self_do_it(:as => :unknown, :auto => true)
     end
 
-    @guess = GuessActsAsCanDoIt.instance
+    @guess = GuessActsAsCanSelfDoIt.instance
 
     # Admin Blogs and Posts
     @admin      = Admin.new

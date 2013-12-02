@@ -4,11 +4,11 @@ describe User do
 
   before(:all) do
    # User
-   class AutoUserActsAsCanDoIt < User
-     acts_as_can_do_it(:as => :known, :auto => true)
+   class AutoUserActsAsCanSelfDoIt < User
+     acts_as_can_self_do_it(:as => :known, :auto => true)
    end
 
-   @user      = AutoUserActsAsCanDoIt.new
+   @user      = AutoUserActsAsCanSelfDoIt.new
 
    # User Blogs and Posts
    @blog_user = Blog.new(@user)
