@@ -9,10 +9,10 @@ RSpec.configure do |config|
  end
 end
 
-class Guess
+class Guest
  include Singleton
   # Custom
-  # Guess only can see admin comments
+  # Guest only can see admin comments
  def can_see_comment?(comment); comment.user.admin?; end
 end
 

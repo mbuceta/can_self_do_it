@@ -1,14 +1,14 @@
 require File.dirname(__FILE__) + '/spec_helper.rb'
 
-describe Guess do
+describe Guest do
 
   before(:all) do
 
-    class GuessActsAsCanSelfDoIt < Guess
+    class GuestActsAsCanSelfDoIt < Guest
       acts_as_can_self_do_it(:as => CanSelfDoIt::Unknown, :auto => false)
     end
 
-    @guess = GuessActsAsCanSelfDoIt.instance
+    @guest = GuestActsAsCanSelfDoIt.instance
 
     # Admin Blogs and Posts
     @admin      = Admin.new
@@ -24,41 +24,41 @@ describe Guess do
   end
 
   it "can see any Blog" do
-    @guess.can_see?(@blog_admin).should == true
-    @guess.can_see?(@blog_user).should  == true
+    @guest.can_see?(@blog_admin).should == true
+    @guest.can_see?(@blog_user).should  == true
   end
 
   it "can see any Post" do
-    @guess.can_see?(@post_admin).should == true
-    @guess.can_see?(@post_user).should  == true
+    @guest.can_see?(@post_admin).should == true
+    @guest.can_see?(@post_user).should  == true
   end
 
   it "can't edit Blogs" do
-    @guess.can_edit?(@blog_admin).should == false
-    @guess.can_edit?(@blog_user).should  == false
+    @guest.can_edit?(@blog_admin).should == false
+    @guest.can_edit?(@blog_user).should  == false
   end
 
   it "can't edit Posts" do
-    @guess.can_edit?(@post_admin).should == false
-    @guess.can_edit?(@post_user).should  == false
+    @guest.can_edit?(@post_admin).should == false
+    @guest.can_edit?(@post_user).should  == false
   end
 
   it "can't delete Blogs" do
-    @guess.can_delete?(@blog_admin).should == false
-    @guess.can_delete?(@blog_user).should  == false
+    @guest.can_delete?(@blog_admin).should == false
+    @guest.can_delete?(@blog_user).should  == false
   end
 
   it "can't delete Posts" do
-    @guess.can_delete?(@post_admin).should == false
-    @guess.can_delete?(@post_user).should  == false
+    @guest.can_delete?(@post_admin).should == false
+    @guest.can_delete?(@post_user).should  == false
   end
 
   it "can't see user comments" do
-    @guess.can_see?(@comment_user).should == false
+    @guest.can_see?(@comment_user).should == false
   end
 
   it "can see admin comments" do
-    @guess.can_see?(@comment_admin).should == true
+    @guest.can_see?(@comment_admin).should == true
   end
 
 

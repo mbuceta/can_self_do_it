@@ -1,0 +1,203 @@
+= can_self_do_it
+
+* http://github.com/mbuceta/can_self_o_it
+
+== Description:
+
+Generate a simple interface to works with users CRUD rights.
+
+
+== Features:
+
+* Allows check permissions for CRUD actions can_create?, can_see?, can_edit? and can_delete?
+* Allows check permissions for general actions responding to can_.+? regular expresion
+* Add an interface for known users with a default implementation of the CRUD action permissions.
+* Add an interface for unknown users with a default implementation of the CRUD action permissions.
+* Allows add custom behaviors for especific objects instead of the default implementation
+
+== Synopsis:
+
+Despite the fact that this gems hasn't any dependency with others gems, it arises from the double
+permission checking in rails.  We have to check action rights in controllers, and in the other hand
+we have to check rights to show actions in views.
+
+This gem allows you to add the permission logic in one place and use it in both, views and controllers.
+Also, this gem add default behaviors for common cases. And overwrite the default behavior using  custom
+implementations.
+
+== Basic usage in a Rails app:
+
+=== Model:
+
+ class Post
+ ...
+ end
+
+ # Represent an identified user of the application
+ class User
+  acts_as_can_self_do_it(:as => CanSelfDoIt::Known)
+  ...
+ end
+
+=== View:
+
+  link_to('edit',   @post) if session_user.user.can_edit?(@post)
+  link_to('delete', @post) if session_user.user.can_delete?(@post)
+
+=== Controller:
+
+ before_filter :check_post_edition_rights, :only => :edit
+ ....
+ private
+
+  def check_post_edition_rights
+    render(:status => :unauthorized) unless session_user.can_edit?(@post)
+  end
+
+
+==  Complete usage example:
+
+=== Application permissions management
+
+Module for custom permissions for Guest (unknown user)
+
+  module GuestCustomPermissions
+   # Ovewrite default CanSelfDoIt::Unknown implementation.
+   # Guest only can see admin comments.
+   # This method overrides
+   # can_see? method for objects of Comment class.
+   # i.e. this method is called when can_see?(comment) is
+   # called and comment is a Comment
+   def can_see_comment?(comment); comment.user.admin?; end
+  end
+
+Module for custom permissions for User (known user)
+
+  module UserCustomPermissions
+    # CanSelfDoIt::Known check this method for default implementation.
+    def admin?; false;end
+
+    # Ovewrite default CanSelfDoIt::Known implementation
+    # Users can comment any post
+    # This method overrides
+    # can_create? method for objects of Comment class.
+    # i.e. this method is called when can_create?(Comment, post)
+    # The post param is the post in which the comment will be written
+    def can_create_comment?(post); true; end
+  end
+
+Module for custom permissions for Admin (admin like user)
+
+  module AdminCustomPermissions
+    # CanSelfDoIt::Known check this method for default implementation.
+    def admin?; true;end
+  end
+
+=== Application classes
+
+  # Represent an unidentified user of the application
+  class Guest
+    acts_as_can_self_do_it(:as => [CanSelfDoIt::Unknown, GuestCustomPermissions])
+    ...
+  end
+
+  # Represent an identified user of the application
+  class User
+    acts_as_can_self_do_it(:as => [CanSelfDoIt::Known, UserCustomPermissions])
+    attr_accessor :blogs
+    ...
+  end
+
+  # Represent the application admin
+  class Admin
+    acts_as_can_self_do_it(:as => [CanSelfDoIt::Known, AdminCustomPermissions])
+    attr_accessor :blogs
+    ...
+  end
+
+  # A simple Blog + Post + Comment app
+  class Blog
+    attr_accessor :user, :posts
+    ...
+  end
+
+  class Post
+    attr_accessor :blog, :comments, :user
+    ...
+  end
+
+  class Comment
+    attr_accessor :post, :user
+    ...
+  end
+
+=== CanSelfDoIt working
+
+
+Working for an instance of Admin
+
+  an_admin.can_see?(admin_blog).should_be true
+  an_admin.can_see?(other_user_blog).should_be true
+  an_admin.can_edit?(admin_blog).should_be true
+  an_admin.can_edit?(other_user_blog).should_be true
+  an_admin.can_create?(Post, admin_blog).should_be true
+  an_admin.can_create?(Post, other_user_blog).should_be true
+
+Working for an instance of User
+
+  an_user.can_see?(user_blog).should_be true
+  an_user.can_see?(other_user_blog).should_be true
+  an_user.can_edit?(user_blog).should_be true
+  an_user.can_edit?(other_user_blog).should_be false
+  an_user.can_create?(Post, user_blog).should_be true
+  an_user.can_create?(Post, other_user_blog).should_be false
+  # Custom
+  an_user.can_create?(Comment, user_post).should_be true
+  an_user.can_create?(Comment, other_user_post).should_be true
+
+Working for an instance of Guest
+  a_guest.can_see?(user_blog).should_be true
+  a_guest.can_see?(user_post).should_be true
+  a_guest.can_edit?(user_blog).should_be false
+  a_guest.can_edit?(user_post).should_be false
+  a_guest.can_create?(Post, user_blog).should_be false
+  a_guest.can_create?(Comment, user_post).should_be false
+  # Custom
+  a_guest.can_see?(user_comment).should_be false
+  a_guest.can_see?(admin_comment).should_be true
+
+
+
+== Requirements:
+
+This gems hasn't dependencies
+
+
+== Install:
+
+sudo gem install can_self_do_it
+
+== License:
+
+(The MIT License)
+
+Copyright (c) 2013 Juan Martin Buceta
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
