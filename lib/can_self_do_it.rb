@@ -13,12 +13,10 @@ end
 
 Module.class_eval do
   def acts_as_can_self_do_it(options={})
-    can_self_do_it_module = case options[:as].to_s
-                            when 'known'   then CanSelfDoIt::Known
-                            when 'unknown' then CanSelfDoIt::Unknown
-                       end
     self.send(:include,  CanSelfDoIt::Base)
     self.send(:include,  CanSelfDoIt::Auto) if options[:auto]
-    self.send(:include,  can_self_do_it_module) if can_self_do_it_module
+    as = options[:as] || []
+    as = [as] unless as.respond_to?(:each)
+    as.each{|m| self.send(:include,  m)}
   end
 end

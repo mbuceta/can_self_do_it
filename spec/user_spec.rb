@@ -5,7 +5,7 @@ describe User do
   before(:all) do
    # User
    class UserActsAsCanSelfDoIt < User
-     acts_as_can_self_do_it(:as => :known, :auto => false)
+     acts_as_can_self_do_it(:as => CanSelfDoIt::Known, :auto => false)
    end
 
    @user      = UserActsAsCanSelfDoIt.new

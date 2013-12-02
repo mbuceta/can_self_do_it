@@ -5,7 +5,7 @@ describe Admin do
   before(:all) do
    # Admin Blogs and Posts
    class AutoAdminActsAsCanSelfDoIt < Admin
-     acts_as_can_self_do_it(:as => :known, :auto => true)
+     acts_as_can_self_do_it(:as => CanSelfDoIt::Known, :auto => true)
    end
 
    @admin      = AutoAdminActsAsCanSelfDoIt.new

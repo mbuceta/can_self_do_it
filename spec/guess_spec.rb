@@ -5,7 +5,7 @@ describe Guess do
   before(:all) do
 
     class GuessActsAsCanSelfDoIt < Guess
-      acts_as_can_self_do_it(:as => :unknown, :auto => false)
+      acts_as_can_self_do_it(:as => CanSelfDoIt::Unknown, :auto => false)
     end
 
     @guess = GuessActsAsCanSelfDoIt.instance
