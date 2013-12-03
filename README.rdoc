@@ -4,26 +4,28 @@
 
 == Description:
 
-Generate a simple interface to works with users CRUD rights.
+Generate a simple interface to work with user CRUD permissions.
 
 
 == Features:
 
-* Allows check permissions for CRUD actions can_create?, can_see?, can_edit? and can_delete?
-* Allows check permissions for general actions responding to can_.+? regular expresion
-* Add an interface for known users with a default implementation of the CRUD action permissions.
-* Add an interface for unknown users with a default implementation of the CRUD action permissions.
-* Allows add custom behaviors for especific objects instead of the default implementation
+* Allows to check permissions for CRUD actions: +can_create?+, +can_see?+, +can_edit?+ and +can_delete?+
+* Allows to check permissions for general actions responding to arbitrary +can_*?+ methods
+* Provides an interface for known users with a default implementation of the CRUD action permissions.
+* Provides an interface for unknown users with a default implementation of the CRUD action permissions.
+* Allows to add custom behaviors for especific objects to replace of the default implementation
 
 == Synopsis:
 
-Despite the fact that this gems hasn't any dependency with others gems, it arises from the double
-permission checking in rails.  We have to check action rights in controllers, and in the other hand
-we have to check rights to show actions in views.
+The need for this gem arises from the double
+permission checking in rails:  we have to check action rights in controllers, and also check rights to show actions
+in the views.
 
 This gem allows you to add the permission logic in one place and use it in both, views and controllers.
-Also, this gem add default behaviors for common cases. And overwrite the default behavior using  custom
-implementations.
+Also, this gem adds default behaviors for common cases and allows overwriting that default behavior as needed.
+
+This gem has no dependencies on other gems, it can be used in the context of a Rails application or any other
+Ruby application
 
 == Basic usage in a Rails app:
 
@@ -59,29 +61,29 @@ implementations.
 
 === Application permissions management
 
-Module for custom permissions for Guest (unknown user)
+Module for custom permissions for a Guest user (unknown user)
 
   module GuestCustomPermissions
    # Ovewrite default CanSelfDoIt::Unknown implementation.
-   # Guest only can see admin comments.
+   # Guests can only see admin comments.
    # This method overrides
-   # can_see? method for objects of Comment class.
+   # can_see? method for Comment objects.
    # i.e. this method is called when can_see?(comment) is
-   # called and comment is a Comment
+   # called and comment is an instance of Comment class
    def can_see_comment?(comment); comment.user.admin?; end
   end
 
 Module for custom permissions for User (known user)
 
   module UserCustomPermissions
-    # CanSelfDoIt::Known check this method for default implementation.
+    # CanSelfDoIt::Known checks this method for default implementation.
     def admin?; false;end
 
     # Ovewrite default CanSelfDoIt::Known implementation
-    # Users can comment any post
+    # Users can comment on any post
     # This method overrides
-    # can_create? method for objects of Comment class.
-    # i.e. this method is called when can_create?(Comment, post)
+    # can_create? method for Comment objects.
+    # i.e. this method is called when can_create?(Comment, post) is called
     # The post param is the post in which the comment will be written
     def can_create_comment?(post); true; end
   end
@@ -95,7 +97,7 @@ Module for custom permissions for Admin (admin like user)
 
 === Application classes
 
-  # Represent an unidentified user of the application
+  # Represents an unidentified user of the application
   class Guest
     acts_as_can_self_do_it(:as => [CanSelfDoIt::Unknown, GuestCustomPermissions])
     ...
@@ -108,7 +110,7 @@ Module for custom permissions for Admin (admin like user)
     ...
   end
 
-  # Represent the application admin
+  # Represents the application admin
   class Admin
     acts_as_can_self_do_it(:as => [CanSelfDoIt::Known, AdminCustomPermissions])
     attr_accessor :blogs
@@ -134,7 +136,7 @@ Module for custom permissions for Admin (admin like user)
 === CanSelfDoIt working
 
 
-Working for an instance of Admin
+On an instance of Admin
 
   an_admin.can_see?(admin_blog).should_be true
   an_admin.can_see?(other_user_blog).should_be true
@@ -143,7 +145,7 @@ Working for an instance of Admin
   an_admin.can_create?(Post, admin_blog).should_be true
   an_admin.can_create?(Post, other_user_blog).should_be true
 
-Working for an instance of User
+On an instance of User
 
   an_user.can_see?(user_blog).should_be true
   an_user.can_see?(other_user_blog).should_be true
@@ -155,7 +157,7 @@ Working for an instance of User
   an_user.can_create?(Comment, user_post).should_be true
   an_user.can_create?(Comment, other_user_post).should_be true
 
-Working for an instance of Guest
+On an instance of Guest
   a_guest.can_see?(user_blog).should_be true
   a_guest.can_see?(user_post).should_be true
   a_guest.can_edit?(user_blog).should_be false
@@ -170,12 +172,12 @@ Working for an instance of Guest
 
 == Requirements:
 
-This gems hasn't dependencies
+This gems has no dependencies
 
 
 == Install:
 
-sudo gem install can_self_do_it
+gem install can_self_do_it
 
 == License:
 
