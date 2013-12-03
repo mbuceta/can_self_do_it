@@ -13,16 +13,71 @@ Generate a simple interface to work with user CRUD permissions.
 * Allows to check permissions for general actions responding to arbitrary +can_*?+ methods
 * Provides an interface for known users with a default implementation of the CRUD action permissions.
 * Provides an interface for unknown users with a default implementation of the CRUD action permissions.
-* Allows to add custom behaviors for especific objects to replace of the default implementation
+* Allows to add custom behaviors for especific target objects to replace the default implementation
 
 == Synopsis:
 
 The need for this gem arises from the double
 permission checking in rails:  we have to check action rights in controllers, and also check rights to show actions
-in the views.
+in the views. i.e:
+
+  # View code
+  link_to('edit',   @post) if session_user == @post.owner || session_user.administrator?
+
+  # Controller code
+  def edit
+    render(:status => :unauthorized) unless session_user == @post.owner || session_user.administrator?
+    ...
+  end
+
 
 This gem allows you to add the permission logic in one place and use it in both, views and controllers.
-Also, this gem adds default behaviors for common cases and allows overwriting that default behavior as needed.
+This is done by a intuitive interface. i.e:
+
+  # View code
+  link_to('edit',   @post) if session_user.can_edit?(@post)
+
+  # Controller code
+  def edit
+    render(:status => :unauthorized) unless session_user.can_edit?(@post)
+    ...
+  end
+
+The logic is added simply defining a method concatenating the undercored class name of the target object to the base method name.
+ie. The logic of:
+
+  can_edit?(post)
+
+can be implemented for all instance of the class +Post+ in a method named:
+
+  can_edit_post?(post)
+
+To get the +post+ substring of the method name from the class named Post we use the
++underscore+ method defined in ActiveSupport::Inflector. In addition we remplace '/' by '_' and '::' by '__'.
+Examples:
+
+  # Implement can_edit? for instances of the class PostComment
+  def can_edit_post_comment?(o)
+
+  # Implement can_see? for instances of the class Shop::Item
+  def can_see_shop__item?(o)
+
+  # Implement can_delete? for instances of the class Invoice
+  def can_delete_invoice(o)
+
+if there is not method can_edit_post?(post) defined, the default version is used:
+  # Default method for can_edit?. It is called when the especific method is not defined
+  def can_edit_default?(an_object)
+
+Similar to the other methods:
+
+  def can_see_default?(an_object)
+
+  def can_create_default?(an_object)
+
+  def can_delete_default?(an_object)
+
+Also, this gem adds the above default implementations for common cases and allows overwriting that default behavior as needed.
 
 This gem has no dependencies on other gems, it can be used in the context of a Rails application or any other
 Ruby application
